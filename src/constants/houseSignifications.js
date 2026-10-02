@@ -278,3 +278,7 @@ export const DEFAULT_HOUSES = [
     notes: 'The threshold to transcendence, solitude, deep meditation and letting go.'
   }
 ];
+
+export const DEFAULT_HOUSE_DESCRIPTIONS = Object.fromEntries(
+  DEFAULT_HOUSES.map((h) => [h.id, `${h.domains}. ${h.notes}`])
+);

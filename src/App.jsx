@@ -5,7 +5,7 @@ import KundliChart from './components/KundliChart';
 import EditPanel from './components/EditPanel';
 import InfoModal from './components/InfoModal';
 
-import { DEFAULT_HOUSES } from './constants/houseSignifications';
+import { DEFAULT_HOUSES, DEFAULT_HOUSE_DESCRIPTIONS } from './constants/houseSignifications';
 import { DEFAULT_PLANET_ICONS, DEFAULT_SIGN_ICONS } from './constants/defaultIcons';
 import { SAMPLE_CHARTS, THEME_PRESETS } from './constants/presets';
 import { calculateHouseSigns } from './utils/kundliCalculations';
@@ -46,12 +46,15 @@ export default function App() {
     savedState?.signIcons ?? DEFAULT_SIGN_ICONS
   );
 
-  // Configurable descriptions for planets and signs
+  // Configurable descriptions for planets, signs, and houses
   const [planetDescriptions, setPlanetDescriptions] = useState(
     savedState?.planetDescriptions ?? DEFAULT_PLANET_DESCRIPTIONS
   );
   const [signDescriptions, setSignDescriptions] = useState(
     savedState?.signDescriptions ?? DEFAULT_SIGN_DESCRIPTIONS
+  );
+  const [houseDescriptions, setHouseDescriptions] = useState(
+    savedState?.houseDescriptions ?? DEFAULT_HOUSE_DESCRIPTIONS
   );
 
   // Display modes
@@ -80,6 +83,7 @@ export default function App() {
       signIcons,
       planetDescriptions,
       signDescriptions,
+      houseDescriptions,
       planetDisplayMode,
       signDisplayMode,
       showDegrees
@@ -93,6 +97,7 @@ export default function App() {
     signIcons,
     planetDescriptions,
     signDescriptions,
+    houseDescriptions,
     planetDisplayMode,
     signDisplayMode,
     showDegrees
@@ -192,11 +197,18 @@ export default function App() {
     }));
   };
 
+  const handleUpdateHouseDescription = (houseId, desc) => {
+    setHouseDescriptions((prev) => ({ ...prev, [houseId]: desc }));
+    handleUpdateHouse(houseId, { description: desc, notes: desc });
+  };
+
+  const handleResetHouseDescription = (houseId) => {
+    const defaultDesc = DEFAULT_HOUSE_DESCRIPTIONS[houseId] || '';
+    handleUpdateHouseDescription(houseId, defaultDesc);
+  };
+
   const handleResetHouseNotes = (houseId) => {
-    const defaultHouse = DEFAULT_HOUSES.find((h) => h.id === houseId);
-    if (defaultHouse) {
-      handleUpdateHouse(houseId, { notes: defaultHouse.notes });
-    }
+    handleResetHouseDescription(houseId);
   };
 
   // Apply calculated Kundli from Birth Details
@@ -217,6 +229,7 @@ export default function App() {
       setSignIcons(DEFAULT_SIGN_ICONS);
       setPlanetDescriptions(DEFAULT_PLANET_DESCRIPTIONS);
       setSignDescriptions(DEFAULT_SIGN_DESCRIPTIONS);
+      setHouseDescriptions(DEFAULT_HOUSE_DESCRIPTIONS);
       setPlanetDisplayMode('both');
       setSignDisplayMode('number');
       setShowDegrees(true);
@@ -235,6 +248,7 @@ export default function App() {
       signIcons,
       planetDescriptions,
       signDescriptions,
+      houseDescriptions,
       planetDisplayMode,
       signDisplayMode,
       showDegrees,
@@ -254,6 +268,7 @@ export default function App() {
       if (imported.signIcons) setSignIcons(imported.signIcons);
       if (imported.planetDescriptions) setPlanetDescriptions(imported.planetDescriptions);
       if (imported.signDescriptions) setSignDescriptions(imported.signDescriptions);
+      if (imported.houseDescriptions) setHouseDescriptions(imported.houseDescriptions);
       if (imported.planetDisplayMode) setPlanetDisplayMode(imported.planetDisplayMode);
       if (imported.signDisplayMode) setSignDisplayMode(imported.signDisplayMode);
       if (imported.showDegrees !== undefined) setShowDegrees(imported.showDegrees);
@@ -378,11 +393,14 @@ export default function App() {
             signIcons={signIcons}
             planetDescriptions={planetDescriptions}
             signDescriptions={signDescriptions}
+            houseDescriptions={houseDescriptions}
             onApplyCalculatedKundli={handleApplyCalculatedKundli}
             onUpdatePlanet={handleUpdatePlanet}
             onUpdatePlanetDescription={handleUpdatePlanetDescription}
             onResetPlanetDescription={handleResetPlanetDescription}
             onUpdateHouse={handleUpdateHouse}
+            onUpdateHouseDescription={handleUpdateHouseDescription}
+            onResetHouseDescription={handleResetHouseDescription}
             onResetHouseNotes={handleResetHouseNotes}
             onApplyThemeToAllHouses={handleApplyThemeToAllHouses}
             onUpdateHouseSign={handleUpdateHouseSign}
@@ -412,7 +430,11 @@ export default function App() {
       <InfoModal
         infoData={infoModalData}
         onClose={() => setInfoModalData(null)}
-        onUpdateHouseNotes={(houseId, notes) => handleUpdateHouse(houseId, { notes })}
+        houses={houses}
+        houseDescriptions={houseDescriptions}
+        onUpdateHouseDescription={handleUpdateHouseDescription}
+        onResetHouseDescription={handleResetHouseDescription}
+        onUpdateHouseNotes={(houseId, notes) => handleUpdateHouseDescription(houseId, notes)}
         onResetHouseNotes={handleResetHouseNotes}
         onUpdateHouseImage={(houseId, image) => handleUpdateHouse(houseId, { image })}
         planetDescriptions={planetDescriptions}

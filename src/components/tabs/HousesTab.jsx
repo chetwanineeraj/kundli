@@ -5,8 +5,10 @@ import { Image as ImageIcon, Sparkles, Paintbrush, Layers, Info } from 'lucide-r
 
 export default function HousesTab({
   houses,
+  houseDescriptions = {},
   onUpdateHouse,
-  onResetHouseNotes,
+  onUpdateHouseDescription,
+  onResetHouseDescription,
   onApplyThemeToAllHouses
 }) {
   const [selectedHouseId, setSelectedHouseId] = useState(1);
@@ -150,7 +152,7 @@ export default function HousesTab({
             </label>
             <button
               type="button"
-              onClick={() => onResetHouseNotes?.(selectedHouse.id)}
+              onClick={() => onResetHouseDescription?.(selectedHouse.id)}
               className="text-[10px] text-slate-400 hover:text-amber-400 transition"
             >
               Reset Default
@@ -158,8 +160,8 @@ export default function HousesTab({
           </div>
           <textarea
             rows="3"
-            value={selectedHouse.notes || ''}
-            onChange={(e) => onUpdateHouse(selectedHouse.id, { notes: e.target.value })}
+            value={houseDescriptions[selectedHouse.id] ?? selectedHouse.description ?? selectedHouse.notes ?? ''}
+            onChange={(e) => onUpdateHouseDescription?.(selectedHouse.id, e.target.value)}
             placeholder="Write custom notes and description for this house..."
             className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:border-amber-500 focus:outline-none resize-none leading-relaxed"
           />

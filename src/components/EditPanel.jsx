@@ -16,11 +16,14 @@ export default function EditPanel({
   signIcons,
   planetDescriptions = {},
   signDescriptions = {},
+  houseDescriptions = {},
   onApplyCalculatedKundli,
   onUpdatePlanet,
   onUpdatePlanetDescription,
   onResetPlanetDescription,
   onUpdateHouse,
+  onUpdateHouseDescription,
+  onResetHouseDescription,
   onResetHouseNotes,
   onApplyThemeToAllHouses,
   onUpdateHouseSign,
@@ -90,8 +93,10 @@ export default function EditPanel({
         {activeTab === 'houses' && (
           <HousesTab
             houses={houses}
+            houseDescriptions={houseDescriptions}
             onUpdateHouse={onUpdateHouse}
-            onResetHouseNotes={onResetHouseNotes}
+            onUpdateHouseDescription={onUpdateHouseDescription}
+            onResetHouseDescription={onResetHouseDescription}
             onApplyThemeToAllHouses={onApplyThemeToAllHouses}
           />
         )}

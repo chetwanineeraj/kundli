@@ -7,6 +7,10 @@ import SvgIcon from './ui/SvgIcon';
 export default function InfoModal({
   infoData,
   onClose,
+  houses = [],
+  houseDescriptions = {},
+  onUpdateHouseDescription,
+  onResetHouseDescription,
   onUpdateHouseNotes,
   onResetHouseNotes,
   onUpdateHouseImage,
@@ -23,6 +27,7 @@ export default function InfoModal({
   if (!infoData) return null;
 
   const { type, id, data, houseSigns, planets } = infoData;
+  const currentHouse = (houses && houses.find((h) => h.id === id)) || data;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
@@ -164,7 +169,7 @@ export default function InfoModal({
                 </label>
                 <input
                   type="text"
-                  value={data.image || ''}
+                  value={currentHouse.image || ''}
                   onChange={(e) => onUpdateHouseImage(data.id, e.target.value)}
                   placeholder="https://example.com/house-image.jpg"
                   className="w-full px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:border-amber-500 focus:outline-none"
@@ -180,7 +185,7 @@ export default function InfoModal({
                   </label>
                   <button
                     type="button"
-                    onClick={() => onResetHouseNotes?.(data.id)}
+                    onClick={() => onResetHouseDescription?.(data.id)}
                     className="text-[10px] text-slate-400 hover:text-amber-400 transition"
                   >
                     Reset Default
@@ -188,10 +193,10 @@ export default function InfoModal({
                 </div>
                 <textarea
                   rows="3"
-                  value={data.notes || ''}
-                  onChange={(e) => onUpdateHouseNotes(data.id, e.target.value)}
+                  value={houseDescriptions[data.id] ?? currentHouse.description ?? currentHouse.notes ?? ''}
+                  onChange={(e) => onUpdateHouseDescription?.(data.id, e.target.value)}
                   placeholder="Add custom notes, interpretations, or reminders for this house..."
-                  className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:border-amber-500 focus:outline-none resize-none"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:border-amber-500 focus:outline-none resize-none leading-relaxed"
                 />
               </div>
             </>
