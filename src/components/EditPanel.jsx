@@ -17,6 +17,9 @@ export default function EditPanel({
   planetDescriptions = {},
   signDescriptions = {},
   houseDescriptions = {},
+  savedProfiles = [],
+  onSaveProfile,
+  onDeleteProfile,
   onApplyCalculatedKundli,
   onUpdatePlanet,
   onUpdatePlanetDescription,
@@ -75,6 +78,9 @@ export default function EditPanel({
         {activeTab === 'birth' && (
           <BirthDetailsTab
             onApplyCalculatedKundli={onApplyCalculatedKundli}
+            savedProfiles={savedProfiles}
+            onSaveProfile={onSaveProfile}
+            onDeleteProfile={onDeleteProfile}
           />
         )}
 

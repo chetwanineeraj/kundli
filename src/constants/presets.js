@@ -141,3 +141,39 @@ export const SAMPLE_CHARTS = [
     }
   }
 ];
+
+export const DEFAULT_PROFILES = [
+  {
+    id: 'profile-india-1947',
+    name: 'India Independence',
+    date: '1947-08-15',
+    time: '00:00:00',
+    city: 'New Delhi, India',
+    lat: 28.6139,
+    lng: 77.2090,
+    tz: '+05:30',
+    useCustomLocation: false
+  },
+  {
+    id: 'profile-steve-jobs',
+    name: 'Steve Jobs',
+    date: '1955-02-24',
+    time: '19:15:00',
+    city: 'San Francisco, USA',
+    lat: 37.7749,
+    lng: -122.4194,
+    tz: '-08:00',
+    useCustomLocation: false
+  },
+  {
+    id: 'profile-vivekananda',
+    name: 'Swami Vivekananda',
+    date: '1863-01-12',
+    time: '06:33:00',
+    city: 'Kolkata, India',
+    lat: 22.5726,
+    lng: 88.3639,
+    tz: '+05:30',
+    useCustomLocation: false
+  }
+];

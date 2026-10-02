@@ -7,8 +7,9 @@ import InfoModal from './components/InfoModal';
 
 import { DEFAULT_HOUSES, DEFAULT_HOUSE_DESCRIPTIONS } from './constants/houseSignifications';
 import { DEFAULT_PLANET_ICONS, DEFAULT_SIGN_ICONS } from './constants/defaultIcons';
-import { SAMPLE_CHARTS, THEME_PRESETS } from './constants/presets';
+import { SAMPLE_CHARTS, THEME_PRESETS, DEFAULT_PROFILES } from './constants/presets';
 import { calculateHouseSigns } from './utils/kundliCalculations';
+import { exportSvgToPng, exportSvgToFile } from './utils/svgExporter';
 import {
   loadSavedState,
   saveStateToStorage,
@@ -57,6 +58,11 @@ export default function App() {
     savedState?.houseDescriptions ?? DEFAULT_HOUSE_DESCRIPTIONS
   );
 
+  // Saved Birth Profiles
+  const [savedProfiles, setSavedProfiles] = useState(
+    savedState?.savedProfiles ?? DEFAULT_PROFILES
+  );
+
   // Display modes
   const [planetDisplayMode, setPlanetDisplayMode] = useState(
     savedState?.planetDisplayMode ?? 'both'
@@ -84,6 +90,7 @@ export default function App() {
       planetDescriptions,
       signDescriptions,
       houseDescriptions,
+      savedProfiles,
       planetDisplayMode,
       signDisplayMode,
       showDegrees
@@ -98,6 +105,7 @@ export default function App() {
     planetDescriptions,
     signDescriptions,
     houseDescriptions,
+    savedProfiles,
     planetDisplayMode,
     signDisplayMode,
     showDegrees
@@ -217,6 +225,23 @@ export default function App() {
     setPlanets(newPlanets);
   };
 
+  // Profile Management
+  const handleSaveProfile = (profileData) => {
+    setSavedProfiles((prev) => {
+      const existingIdx = prev.findIndex((p) => p.id === profileData.id);
+      if (existingIdx >= 0) {
+        const updated = [...prev];
+        updated[existingIdx] = profileData;
+        return updated;
+      }
+      return [profileData, ...prev];
+    });
+  };
+
+  const handleDeleteProfile = (profileId) => {
+    setSavedProfiles((prev) => prev.filter((p) => p.id !== profileId));
+  };
+
   // Reset to default factory state
   const handleReset = () => {
     if (window.confirm('Reset the Kundli chart and all custom configurations to default?')) {
@@ -230,6 +255,7 @@ export default function App() {
       setPlanetDescriptions(DEFAULT_PLANET_DESCRIPTIONS);
       setSignDescriptions(DEFAULT_SIGN_DESCRIPTIONS);
       setHouseDescriptions(DEFAULT_HOUSE_DESCRIPTIONS);
+      setSavedProfiles(DEFAULT_PROFILES);
       setPlanetDisplayMode('both');
       setSignDisplayMode('number');
       setShowDegrees(true);
@@ -249,6 +275,7 @@ export default function App() {
       planetDescriptions,
       signDescriptions,
       houseDescriptions,
+      savedProfiles,
       planetDisplayMode,
       signDisplayMode,
       showDegrees,
@@ -269,6 +296,7 @@ export default function App() {
       if (imported.planetDescriptions) setPlanetDescriptions(imported.planetDescriptions);
       if (imported.signDescriptions) setSignDescriptions(imported.signDescriptions);
       if (imported.houseDescriptions) setHouseDescriptions(imported.houseDescriptions);
+      if (imported.savedProfiles) setSavedProfiles(imported.savedProfiles);
       if (imported.planetDisplayMode) setPlanetDisplayMode(imported.planetDisplayMode);
       if (imported.signDisplayMode) setSignDisplayMode(imported.signDisplayMode);
       if (imported.showDegrees !== undefined) setShowDegrees(imported.showDegrees);
@@ -394,6 +422,9 @@ export default function App() {
             planetDescriptions={planetDescriptions}
             signDescriptions={signDescriptions}
             houseDescriptions={houseDescriptions}
+            savedProfiles={savedProfiles}
+            onSaveProfile={handleSaveProfile}
+            onDeleteProfile={handleDeleteProfile}
             onApplyCalculatedKundli={handleApplyCalculatedKundli}
             onUpdatePlanet={handleUpdatePlanet}
             onUpdatePlanetDescription={handleUpdatePlanetDescription}
