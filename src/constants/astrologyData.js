@@ -390,3 +390,11 @@ export const NAKSHATRAS = [
 
 export const SIGN_MAP = Object.fromEntries(SIGNS.map(s => [s.id, s]));
 export const PLANET_MAP = Object.fromEntries(PLANETS.map(p => [p.id, p]));
+
+export const DEFAULT_PLANET_DESCRIPTIONS = Object.fromEntries(
+  PLANETS.map((p) => [p.id, p.karaka])
+);
+
+export const DEFAULT_SIGN_DESCRIPTIONS = Object.fromEntries(
+  SIGNS.map((s) => [s.id, s.description])
+);

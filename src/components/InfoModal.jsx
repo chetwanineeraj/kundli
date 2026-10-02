@@ -8,7 +8,14 @@ export default function InfoModal({
   infoData,
   onClose,
   onUpdateHouseNotes,
+  onResetHouseNotes,
   onUpdateHouseImage,
+  planetDescriptions = {},
+  signDescriptions = {},
+  onUpdatePlanetDescription,
+  onResetPlanetDescription,
+  onUpdateSignDescription,
+  onResetSignDescription,
   planetIcons,
   signIcons,
   onQuickEdit
@@ -164,14 +171,23 @@ export default function InfoModal({
                 />
               </div>
 
-              {/* Configurable Notes */}
+              {/* Configurable Notes & Description */}
               <div className="space-y-1">
-                <label className="text-slate-400 font-semibold flex items-center gap-1.5">
-                  <Edit3 className="w-3.5 h-3.5 text-amber-400" />
-                  Personal Astrological Notes:
-                </label>
+                <div className="flex items-center justify-between">
+                  <label className="text-slate-400 font-semibold flex items-center gap-1.5">
+                    <Edit3 className="w-3.5 h-3.5 text-amber-400" />
+                    Configurable Notes & Description:
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => onResetHouseNotes?.(data.id)}
+                    className="text-[10px] text-slate-400 hover:text-amber-400 transition"
+                  >
+                    Reset Default
+                  </button>
+                </div>
                 <textarea
-                  rows="2"
+                  rows="3"
                   value={data.notes || ''}
                   onChange={(e) => onUpdateHouseNotes(data.id, e.target.value)}
                   placeholder="Add custom notes, interpretations, or reminders for this house..."
@@ -251,14 +267,28 @@ export default function InfoModal({
                 );
               })()}
 
-              {/* Karaka and Nature */}
-              <div className="p-3 rounded-xl bg-slate-800/40 border border-slate-700/50 space-y-1.5">
-                <span className="text-slate-400 text-[10px] uppercase font-semibold block">
-                  Natural Significations (Karakatva)
-                </span>
-                <p className="text-slate-300 leading-relaxed">
-                  {PLANETS.find((p) => p.id === id)?.karaka}
-                </p>
+              {/* Configurable Planet Description & Karakatva */}
+              <div className="p-3 rounded-xl bg-slate-800/40 border border-slate-700/50 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-300 text-xs font-semibold flex items-center gap-1.5">
+                    <Edit3 className="w-3.5 h-3.5 text-amber-400" />
+                    Configurable Description & Significations:
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => onResetPlanetDescription?.(id)}
+                    className="text-[10px] text-slate-400 hover:text-amber-400 transition"
+                  >
+                    Reset Default
+                  </button>
+                </div>
+                <textarea
+                  rows="3"
+                  value={planetDescriptions[id] ?? PLANETS.find((p) => p.id === id)?.karaka ?? ''}
+                  onChange={(e) => onUpdatePlanetDescription?.(id, e.target.value)}
+                  placeholder="Enter custom description or astrological significations for this planet..."
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:border-amber-500 focus:outline-none resize-none leading-relaxed"
+                />
               </div>
 
               <div className="flex justify-end pt-2">
@@ -307,11 +337,28 @@ export default function InfoModal({
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-800/40 border border-slate-700/50">
-                <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-1">
-                  Characteristics
-                </span>
-                <p className="text-slate-300 leading-relaxed">{data.description}</p>
+              {/* Configurable Sign Description & Characteristics */}
+              <div className="p-3 rounded-xl bg-slate-800/40 border border-slate-700/50 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-300 text-xs font-semibold flex items-center gap-1.5">
+                    <Edit3 className="w-3.5 h-3.5 text-amber-400" />
+                    Configurable Description & Characteristics:
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => onResetSignDescription?.(data.id)}
+                    className="text-[10px] text-slate-400 hover:text-amber-400 transition"
+                  >
+                    Reset Default
+                  </button>
+                </div>
+                <textarea
+                  rows="3"
+                  value={signDescriptions[data.id] ?? data.description ?? ''}
+                  onChange={(e) => onUpdateSignDescription?.(data.id, e.target.value)}
+                  placeholder="Enter custom characteristics or description for this sign..."
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:border-amber-500 focus:outline-none resize-none leading-relaxed"
+                />
               </div>
             </>
           )}

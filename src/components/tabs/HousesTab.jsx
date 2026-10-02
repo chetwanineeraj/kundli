@@ -6,6 +6,7 @@ import { Image as ImageIcon, Sparkles, Paintbrush, Layers, Info } from 'lucide-r
 export default function HousesTab({
   houses,
   onUpdateHouse,
+  onResetHouseNotes,
   onApplyThemeToAllHouses
 }) {
   const [selectedHouseId, setSelectedHouseId] = useState(1);
@@ -140,18 +141,27 @@ export default function HousesTab({
           )}
         </div>
 
-        {/* House Custom Notes */}
+        {/* House Custom Notes & Description */}
         <div className="space-y-1.5 pt-2 border-t border-slate-800">
-          <label className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
-            <Info className="w-3.5 h-3.5 text-amber-400" />
-            Custom Notes & Astrological Meaning:
-          </label>
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+              <Info className="w-3.5 h-3.5 text-amber-400" />
+              Custom Description & Meaning:
+            </label>
+            <button
+              type="button"
+              onClick={() => onResetHouseNotes?.(selectedHouse.id)}
+              className="text-[10px] text-slate-400 hover:text-amber-400 transition"
+            >
+              Reset Default
+            </button>
+          </div>
           <textarea
             rows="3"
             value={selectedHouse.notes || ''}
             onChange={(e) => onUpdateHouse(selectedHouse.id, { notes: e.target.value })}
-            placeholder="Write custom notes for this house..."
-            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:border-amber-500 focus:outline-none resize-none"
+            placeholder="Write custom notes and description for this house..."
+            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:border-amber-500 focus:outline-none resize-none leading-relaxed"
           />
         </div>
       </div>

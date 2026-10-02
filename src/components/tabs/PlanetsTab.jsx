@@ -8,7 +8,10 @@ export default function PlanetsTab({
   planets,
   houseSigns,
   planetIcons,
-  onUpdatePlanet
+  planetDescriptions = {},
+  onUpdatePlanet,
+  onUpdatePlanetDescription,
+  onResetPlanetDescription
 }) {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -193,6 +196,29 @@ export default function PlanetsTab({
                 <span>
                   Lord: <strong className="text-slate-300">{nakshatra.ruler}</strong>
                 </span>
+              </div>
+
+              {/* Configurable Description / Karakatva */}
+              <div className="pt-1.5 border-t border-slate-800/80 space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-semibold text-slate-400">
+                    Description & Karakatvas:
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => onResetPlanetDescription(planetDef.id)}
+                    className="text-[9px] text-slate-500 hover:text-amber-400 transition"
+                  >
+                    Reset
+                  </button>
+                </div>
+                <textarea
+                  rows="2"
+                  value={planetDescriptions[planetDef.id] ?? planetDef.karaka ?? ''}
+                  onChange={(e) => onUpdatePlanetDescription(planetDef.id, e.target.value)}
+                  placeholder="Enter custom description or significations..."
+                  className="w-full px-2 py-1 rounded bg-slate-950 border border-slate-800 text-slate-200 text-[11px] focus:border-amber-500 focus:outline-none resize-none leading-relaxed"
+                />
               </div>
             </div>
           );

@@ -14,11 +14,18 @@ export default function EditPanel({
   houseSigns,
   planetIcons,
   signIcons,
+  planetDescriptions = {},
+  signDescriptions = {},
   onApplyCalculatedKundli,
   onUpdatePlanet,
+  onUpdatePlanetDescription,
+  onResetPlanetDescription,
   onUpdateHouse,
+  onResetHouseNotes,
   onApplyThemeToAllHouses,
   onUpdateHouseSign,
+  onUpdateSignDescription,
+  onResetSignDescription,
   onApplyTheme,
   onUpdatePlanetIcon,
   onUpdateSignIcon,
@@ -73,7 +80,10 @@ export default function EditPanel({
             planets={planets}
             houseSigns={houseSigns}
             planetIcons={planetIcons}
+            planetDescriptions={planetDescriptions}
             onUpdatePlanet={onUpdatePlanet}
+            onUpdatePlanetDescription={onUpdatePlanetDescription}
+            onResetPlanetDescription={onResetPlanetDescription}
           />
         )}
 
@@ -81,6 +91,7 @@ export default function EditPanel({
           <HousesTab
             houses={houses}
             onUpdateHouse={onUpdateHouse}
+            onResetHouseNotes={onResetHouseNotes}
             onApplyThemeToAllHouses={onApplyThemeToAllHouses}
           />
         )}
@@ -99,7 +110,10 @@ export default function EditPanel({
         {activeTab === 'themes' && (
           <ThemesTab
             houseSigns={houseSigns}
+            signDescriptions={signDescriptions}
             onUpdateHouseSign={onUpdateHouseSign}
+            onUpdateSignDescription={onUpdateSignDescription}
+            onResetSignDescription={onResetSignDescription}
             onApplyTheme={onApplyTheme}
             onExportPng={onExportPng}
             onExportSvg={onExportSvg}

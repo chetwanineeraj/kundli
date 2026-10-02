@@ -1,16 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { THEME_PRESETS } from '../../constants/presets';
 import { SIGNS } from '../../constants/astrologyData';
-import { Palette, Download, FileCode, Image as ImageIcon, Sliders } from 'lucide-react';
+import { Palette, Download, FileCode, Image as ImageIcon, Sliders, BookOpen } from 'lucide-react';
 
 export default function ThemesTab({
   houseSigns,
+  signDescriptions = {},
   onUpdateHouseSign,
+  onUpdateSignDescription,
+  onResetSignDescription,
   onApplyTheme,
   onExportPng,
   onExportSvg,
   onExportJson
 }) {
+  const [selectedSignId, setSelectedSignId] = useState(1);
+  const currentSign = SIGNS.find((s) => s.id === selectedSignId) || SIGNS[0];
   return (
     <div className="space-y-5">
       {/* 1-Click Color Themes */}
@@ -77,6 +82,45 @@ export default function ThemesTab({
               </select>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Configurable Zodiac Sign Descriptions */}
+      <div className="space-y-2.5 pt-3 border-t border-slate-800">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+            <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+            Zodiac Sign Descriptions & Characteristics
+          </label>
+        </div>
+        <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-2.5">
+          <div className="flex items-center justify-between gap-2">
+            <select
+              value={selectedSignId}
+              onChange={(e) => setSelectedSignId(Number(e.target.value))}
+              className="px-2 py-1 rounded bg-slate-800 border border-slate-700 text-amber-300 text-xs font-semibold focus:border-amber-500 focus:outline-none"
+            >
+              {SIGNS.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.id}. {s.en} ({s.hi})
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              onClick={() => onResetSignDescription(selectedSignId)}
+              className="text-[10px] text-slate-400 hover:text-amber-400 transition"
+            >
+              Reset Default
+            </button>
+          </div>
+          <textarea
+            rows="3"
+            value={signDescriptions[selectedSignId] ?? currentSign.description ?? ''}
+            onChange={(e) => onUpdateSignDescription(selectedSignId, e.target.value)}
+            placeholder="Write custom description for this zodiac sign..."
+            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:border-amber-500 focus:outline-none resize-none leading-relaxed"
+          />
         </div>
       </div>
 

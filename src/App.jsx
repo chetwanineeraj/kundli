@@ -15,8 +15,12 @@ import {
   exportStateToJson,
   importStateFromJson
 } from './utils/storage';
-import { exportSvgToPng, exportSvgToFile } from './utils/svgExporter';
-import { PLANETS, SIGNS } from './constants/astrologyData';
+import {
+  PLANETS,
+  SIGNS,
+  DEFAULT_PLANET_DESCRIPTIONS,
+  DEFAULT_SIGN_DESCRIPTIONS
+} from './constants/astrologyData';
 
 export default function App() {
   const chartSvgRef = useRef(null);
@@ -40,6 +44,14 @@ export default function App() {
   );
   const [signIcons, setSignIcons] = useState(
     savedState?.signIcons ?? DEFAULT_SIGN_ICONS
+  );
+
+  // Configurable descriptions for planets and signs
+  const [planetDescriptions, setPlanetDescriptions] = useState(
+    savedState?.planetDescriptions ?? DEFAULT_PLANET_DESCRIPTIONS
+  );
+  const [signDescriptions, setSignDescriptions] = useState(
+    savedState?.signDescriptions ?? DEFAULT_SIGN_DESCRIPTIONS
   );
 
   // Display modes
@@ -66,6 +78,8 @@ export default function App() {
       houses,
       planetIcons,
       signIcons,
+      planetDescriptions,
+      signDescriptions,
       planetDisplayMode,
       signDisplayMode,
       showDegrees
@@ -77,6 +91,8 @@ export default function App() {
     houses,
     planetIcons,
     signIcons,
+    planetDescriptions,
+    signDescriptions,
     planetDisplayMode,
     signDisplayMode,
     showDegrees
@@ -153,6 +169,36 @@ export default function App() {
     setPlanets(preset.planets);
   };
 
+  // Description Handlers
+  const handleUpdatePlanetDescription = (planetId, desc) => {
+    setPlanetDescriptions((prev) => ({ ...prev, [planetId]: desc }));
+  };
+
+  const handleResetPlanetDescription = (planetId) => {
+    setPlanetDescriptions((prev) => ({
+      ...prev,
+      [planetId]: DEFAULT_PLANET_DESCRIPTIONS[planetId]
+    }));
+  };
+
+  const handleUpdateSignDescription = (signId, desc) => {
+    setSignDescriptions((prev) => ({ ...prev, [signId]: desc }));
+  };
+
+  const handleResetSignDescription = (signId) => {
+    setSignDescriptions((prev) => ({
+      ...prev,
+      [signId]: DEFAULT_SIGN_DESCRIPTIONS[signId]
+    }));
+  };
+
+  const handleResetHouseNotes = (houseId) => {
+    const defaultHouse = DEFAULT_HOUSES.find((h) => h.id === houseId);
+    if (defaultHouse) {
+      handleUpdateHouse(houseId, { notes: defaultHouse.notes });
+    }
+  };
+
   // Apply calculated Kundli from Birth Details
   const handleApplyCalculatedKundli = (newLagnaSign, newPlanets) => {
     handleLagnaChange(newLagnaSign);
@@ -169,6 +215,8 @@ export default function App() {
       setHouses(DEFAULT_HOUSES);
       setPlanetIcons(DEFAULT_PLANET_ICONS);
       setSignIcons(DEFAULT_SIGN_ICONS);
+      setPlanetDescriptions(DEFAULT_PLANET_DESCRIPTIONS);
+      setSignDescriptions(DEFAULT_SIGN_DESCRIPTIONS);
       setPlanetDisplayMode('both');
       setSignDisplayMode('number');
       setShowDegrees(true);
@@ -185,6 +233,8 @@ export default function App() {
       houses,
       planetIcons,
       signIcons,
+      planetDescriptions,
+      signDescriptions,
       planetDisplayMode,
       signDisplayMode,
       showDegrees,
@@ -202,6 +252,8 @@ export default function App() {
       if (imported.houses) setHouses(imported.houses);
       if (imported.planetIcons) setPlanetIcons(imported.planetIcons);
       if (imported.signIcons) setSignIcons(imported.signIcons);
+      if (imported.planetDescriptions) setPlanetDescriptions(imported.planetDescriptions);
+      if (imported.signDescriptions) setSignDescriptions(imported.signDescriptions);
       if (imported.planetDisplayMode) setPlanetDisplayMode(imported.planetDisplayMode);
       if (imported.signDisplayMode) setSignDisplayMode(imported.signDisplayMode);
       if (imported.showDegrees !== undefined) setShowDegrees(imported.showDegrees);
@@ -324,11 +376,18 @@ export default function App() {
             houseSigns={houseSigns}
             planetIcons={planetIcons}
             signIcons={signIcons}
+            planetDescriptions={planetDescriptions}
+            signDescriptions={signDescriptions}
             onApplyCalculatedKundli={handleApplyCalculatedKundli}
             onUpdatePlanet={handleUpdatePlanet}
+            onUpdatePlanetDescription={handleUpdatePlanetDescription}
+            onResetPlanetDescription={handleResetPlanetDescription}
             onUpdateHouse={handleUpdateHouse}
+            onResetHouseNotes={handleResetHouseNotes}
             onApplyThemeToAllHouses={handleApplyThemeToAllHouses}
             onUpdateHouseSign={handleUpdateHouseSign}
+            onUpdateSignDescription={handleUpdateSignDescription}
+            onResetSignDescription={handleResetSignDescription}
             onApplyTheme={handleApplyTheme}
             onUpdatePlanetIcon={(id, val) =>
               setPlanetIcons((prev) => ({ ...prev, [id]: val }))
@@ -354,7 +413,14 @@ export default function App() {
         infoData={infoModalData}
         onClose={() => setInfoModalData(null)}
         onUpdateHouseNotes={(houseId, notes) => handleUpdateHouse(houseId, { notes })}
+        onResetHouseNotes={handleResetHouseNotes}
         onUpdateHouseImage={(houseId, image) => handleUpdateHouse(houseId, { image })}
+        planetDescriptions={planetDescriptions}
+        signDescriptions={signDescriptions}
+        onUpdatePlanetDescription={handleUpdatePlanetDescription}
+        onResetPlanetDescription={handleResetPlanetDescription}
+        onUpdateSignDescription={handleUpdateSignDescription}
+        onResetSignDescription={handleResetSignDescription}
         planetIcons={planetIcons}
         signIcons={signIcons}
         onQuickEdit={(tab) => {
